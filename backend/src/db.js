@@ -7,9 +7,9 @@ const config = {
   server: process.env.MSSQL_HOST || "sql.bsite.net",
   database: process.env.MSSQL_DB || "suster_",
   options: {
-    encrypt: true, // obrigatório para Azure ou conexões externas
-    trustServerCertificate: true, // permite certificado autoassinado
-    instanceName: "MSSQL2016" // nome da instância, se houver
+    encrypt: true,
+    trustServerCertificate: true,
+    instanceName: "MSSQL2016"
   },
   pool: {
     max: 10,
@@ -18,13 +18,11 @@ const config = {
   }
 };
 
-export const pool = new sql.ConnectionPool(config)
-  .connect()
-  .then(pool => {
-    console.log("Conectado ao MSSQL!");
-    return pool;
-  })
-  .catch(err => {
-    console.error("Erro ao conectar ao MSSQL:", err);
-    process.exit(1);
-  });
+// Cria o pool global
+const pool = new sql.ConnectionPool(config);
+
+// Exporta o pool já conectado
+export const getPool = async () => {
+  if (!pool.connected) await pool.connect();
+  return pool;
+};
