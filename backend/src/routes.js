@@ -56,11 +56,14 @@ r.post("/users", async (req, res) => {
 
 r.get("/funcoes", async (_, res) => {
   try {
-    const result = await pool.request().query("SELECT id, nome_funcao FROM funcoes ORDER BY id");
+    const pool = await getPool();
+    const result = await pool.request().query(
+      `SELECT id, nome_funcao FROM funcoes ORDER BY id`
+    );
     res.json(result.recordset);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Erro ao buscar funções" });
+    res.status(500).json({ message: "Erro ao123 buscar funções" });
   }
 });
 
