@@ -16,7 +16,7 @@ import {
   Legend,
 } from "recharts";
 import { motion } from "framer-motion";
-import "./css/Dashboard.css"; // importa CSS separado
+import "./css/dashboard.css"; // importa CSS separado
 import TopMenu from "./TopMenu";
 
 
