@@ -54,6 +54,16 @@ r.post("/users", async (req, res) => {
   }
 });
 
+r.get("/funcoes", async (_, res) => {
+  try {
+    const result = await pool.request().query("SELECT id, nome_funcao FROM funcoes ORDER BY id");
+    res.json(result.recordset);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Erro ao buscar funções" });
+  }
+});
+
 // Atualizar usuário
 r.put("/users/:id", async (req, res) => {
   const { id } = req.params;
