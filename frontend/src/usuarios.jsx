@@ -28,7 +28,13 @@ export default function Users({ user, onLogout }) {
         axios.get(`${baseURL}/funcoes`)
       ]);
 
-      setUsers(Array.isArray(usersRes.data) ? usersRes.data : []);
+      // Se o backend retornar funcao_id, mas você quiser mostrar o nome da função
+      const usersWithFuncaoNome = usersRes.data.map(u => {
+        const funcao = funcoesRes.data.find(f => f.id === u.funcao_id);
+        return { ...u, funcao_nome: funcao ? funcao.nome_funcao : "" };
+      });
+
+      setUsers(usersWithFuncaoNome);
       setFuncoes(Array.isArray(funcoesRes.data) ? funcoesRes.data : []);
     } catch (err) {
       console.error(err);
@@ -50,7 +56,8 @@ export default function Users({ user, onLogout }) {
 
     try {
       const res = await axios.post(`${baseURL}/users`, newUser);
-      setUsers(prev => [...prev, res.data]);
+      const funcao = funcoes.find(f => f.id === res.data.funcao_id);
+      setUsers(prev => [...prev, { ...res.data, funcao_nome: funcao?.nome_funcao || "" }]);
       setNewUser({ nome: "", sobrenome: "", email: "", senha: "", funcao_id: "" });
     } catch (err) {
       console.error(err);
@@ -66,6 +73,7 @@ export default function Users({ user, onLogout }) {
     try {
       await axios.put(`${baseURL}/users/${id}`, updatedUser);
       alert("Usuário atualizado!");
+      fetchData(); // Atualiza dados para pegar nome da função atualizado
     } catch (err) {
       console.error(err);
       setError("Erro ao atualizar usuário");
@@ -99,48 +107,20 @@ export default function Users({ user, onLogout }) {
 
         {/* Formulário de novo usuário */}
         <div className="new-user">
-          <input
-            type="text"
-            placeholder="Nome"
-            value={newUser.nome}
-            onChange={e => setNewUser(prev => ({ ...prev, nome: e.target.value }))}
-          />
-          <input
-            type="text"
-            placeholder="Sobrenome"
-            value={newUser.sobrenome}
-            onChange={e => setNewUser(prev => ({ ...prev, sobrenome: e.target.value }))}
-          />
-          <select
-            value={newUser.funcao_id}
-            onChange={e => setNewUser(prev => ({ ...prev, funcao_id: e.target.value }))}
-          >
+          <input type="text" placeholder="Nome" value={newUser.nome} onChange={e => setNewUser(prev => ({ ...prev, nome: e.target.value }))} />
+          <input type="text" placeholder="Sobrenome" value={newUser.sobrenome} onChange={e => setNewUser(prev => ({ ...prev, sobrenome: e.target.value }))} />
+          <select value={newUser.funcao_id} onChange={e => setNewUser(prev => ({ ...prev, funcao_id: e.target.value }))}>
             <option value="">Selecione a função</option>
-            {funcoes.map(f => (
-              <option key={f.id} value={f.id}>{f.nome_funcao}</option>
-            ))}
+            {funcoes.map(f => <option key={f.id} value={f.id}>{f.nome_funcao}</option>)}
           </select>
-          <input
-            type="email"
-            placeholder="Email"
-            value={newUser.email}
-            onChange={e => setNewUser(prev => ({ ...prev, email: e.target.value }))}
-          />
-          <input
-            type="password"
-            placeholder="Senha"
-            value={newUser.senha}
-            onChange={e => setNewUser(prev => ({ ...prev, senha: e.target.value }))}
-          />
+          <input type="email" placeholder="Email" value={newUser.email} onChange={e => setNewUser(prev => ({ ...prev, email: e.target.value }))} />
+          <input type="password" placeholder="Senha" value={newUser.senha} onChange={e => setNewUser(prev => ({ ...prev, senha: e.target.value }))} />
           <button onClick={handleCreate}>Criar Usuário</button>
         </div>
 
         {/* Tabela de usuários */}
-        {loading ? (
-          <p>Carregando usuários...</p>
-        ) : users.length === 0 ? (
-          <p>Nenhum usuário encontrado.</p>
-        ) : (
+        {loading ? <p>Carregando usuários...</p> :
+          users.length === 0 ? <p>Nenhum usuário encontrado.</p> :
           <table className="users-table">
             <thead>
               <tr>
@@ -158,14 +138,10 @@ export default function Users({ user, onLogout }) {
                   <td><input value={u.nome || ""} onChange={e => handleChange(u.id, "nome", e.target.value)} /></td>
                   <td><input value={u.sobrenome || ""} onChange={e => handleChange(u.id, "sobrenome", e.target.value)} /></td>
                   <td>
-                    <select
-                      value={u.funcao_id || ""}
-                      onChange={e => handleChange(u.id, "funcao_id", e.target.value)}
-                    >
-                      {funcoes.map(f => (
-                        <option key={f.id} value={f.id}>{f.nome_funcao}</option>
-                      ))}
+                    <select value={u.funcao_id || ""} onChange={e => handleChange(u.id, "funcao_id", e.target.value)}>
+                      {funcoes.map(f => <option key={f.id} value={f.id}>{f.nome_funcao}</option>)}
                     </select>
+                    <span>{u.funcao_nome}</span>
                   </td>
                   <td><input value={u.email || ""} onChange={e => handleChange(u.id, "email", e.target.value)} /></td>
                   <td><input type="password" value={u.senha || ""} onChange={e => handleChange(u.id, "senha", e.target.value)} /></td>
@@ -177,7 +153,7 @@ export default function Users({ user, onLogout }) {
               ))}
             </tbody>
           </table>
-        )}
+        }
       </main>
     </div>
   );
