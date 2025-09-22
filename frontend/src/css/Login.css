@@ -1,0 +1,80 @@
+/* Fundo e centralização */
+.login-wrapper {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  font-family: 'Arial', sans-serif;
+}
+
+/* Card de login */
+.login-card {
+  width: 100%;
+  max-width: 400px; /* controla largura máxima */
+  padding: 40px 30px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Título e subtítulo */
+.login-title {
+  font-size: 28px;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.login-subtitle {
+  font-size: 16px;
+  margin-bottom: 20px;
+  color: #666;
+}
+
+/* Formulário */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Inputs */
+.login-input {
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+  transition: border 0.2s;
+}
+
+.login-input:focus {
+  border-color: #6a11cb;
+}
+
+/* Botão */
+.login-button {
+  padding: 12px;
+  font-size: 16px;
+  background-color: #6a11cb;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.login-button:hover {
+  background-color: #2575fc;
+}
+
+/* Mensagem de erro */
+.login-error {
+  color: #ff4d4f;
+  font-size: 14px;
+}

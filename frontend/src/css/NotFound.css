@@ -1,0 +1,49 @@
+.notfound-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* ocupa toda a altura da tela */
+  width: 100vw;       /* ocupa toda a largura da tela */
+  background: #f9f9f9;
+  box-sizing: border-box;
+}
+
+.notfound-main {
+  flex: 1; /* ocupa todo o espaço restante abaixo do menu */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+}
+
+.notfound-main h1 {
+  font-size: 6rem;
+  margin: 0;
+  color: #f44336;
+}
+
+.notfound-main h2 {
+  font-size: 2rem;
+  margin: 1rem 0;
+}
+
+.notfound-main p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  color: #555;
+}
+
+.notfound-button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  background: #4caf50;
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.notfound-button:hover {
+  background: #45a049;
+}
