@@ -5,9 +5,9 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import Login from "./Login";
+import Login from "./login";
 import Dashboard from "./Dashboard";
-import Home from "./Home";
+import Home from "./home";
 import "./css/App.css";
 import NotFound from "./NotFound";
 import Usuarios from "./usuarios";
