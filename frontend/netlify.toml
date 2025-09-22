@@ -1,3 +1,4 @@
 [build]
+  base = "frontend"         # se seu projeto está em /frontend
+  publish = "frontend/dist" # mesma pasta que outDir no Vite
   command = "npm run build"
-  publish = "dist"
