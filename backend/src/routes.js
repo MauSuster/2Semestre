@@ -28,7 +28,7 @@ r.post("/users", async (req, res) => {
 
   if (!nome || !sobrenome || !email || !senha || !funcao_id) {
     return res.status(400).json({
-      message: "Nome, sobrenome, email, senha e funcao_id são obrigatórios",
+      message: "nome, sobrenome, email, senha e funcao_id são obrigatórios",
     });
   }
 
@@ -44,21 +44,10 @@ r.post("/users", async (req, res) => {
       .query(
         `INSERT INTO users (nome, sobrenome, email, senha, funcao_id)
          VALUES (@nome, @sobrenome, @email, @senha, @funcao_id);
-         SELECT SCOPE_IDENTITY() AS id;`
+         SELECT * FROM users WHERE id = SCOPE_IDENTITY();`
       );
 
-    const newId = result.recordset[0].id;
-    const newUser = await pool
-      .request()
-      .input("id", newId)
-      .query(
-        `SELECT u.id, u.nome, u.sobrenome, u.email, f.nome_funcao AS funcao
-         FROM users u
-         JOIN funcoes f ON u.funcao_id = f.id
-         WHERE u.id = @id`
-      );
-
-    res.status(201).json(newUser.recordset[0]);
+    res.status(201).json(result.recordset[0]);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Erro ao criar usuário" });

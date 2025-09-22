@@ -7,49 +7,51 @@ const baseURL = "https://twosemestre.onrender.com/api";
 
 export default function Users({ user, onLogout }) {
   const [users, setUsers] = useState([]);
+  const [funcoes, setFuncoes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [newUser, setNewUser] = useState({
     nome: "",
     sobrenome: "",
-    funcao: "",
     email: "",
-    senha: ""
+    senha: "",
+    funcao_id: ""
   });
   const [error, setError] = useState("");
 
-  // Carregar usuários da API
-  const fetchUsers = async () => {
+  // Carregar usuários e funções
+  const fetchData = async () => {
     setLoading(true);
     setError("");
     try {
-      const res = await axios.get(`${baseURL}/users`);
-      const usersData = Array.isArray(res.data)
-        ? res.data
-        : Array.isArray(res.data.users)
-        ? res.data.users
-        : [];
-      setUsers(usersData);
+      const [usersRes, funcoesRes] = await Promise.all([
+        axios.get(`${baseURL}/users`),
+        axios.get(`${baseURL}/funcoes`)
+      ]);
+
+      setUsers(Array.isArray(usersRes.data) ? usersRes.data : []);
+      setFuncoes(Array.isArray(funcoesRes.data) ? funcoesRes.data : []);
     } catch (err) {
       console.error(err);
-      setError("Erro ao carregar usuários");
+      setError("Erro ao carregar dados");
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchUsers();
+    fetchData();
   }, []);
 
   // Criar novo usuário
   const handleCreate = async () => {
-    const { nome, sobrenome, funcao, email, senha } = newUser;
-    if (!nome || !sobrenome || !funcao || !email || !senha) return setError("Preencha todos os campos");
+    const { nome, sobrenome, email, senha, funcao_id } = newUser;
+    if (!nome || !sobrenome || !email || !senha || !funcao_id)
+      return setError("Preencha todos os campos");
 
     try {
       const res = await axios.post(`${baseURL}/users`, newUser);
       setUsers(prev => [...prev, res.data]);
-      setNewUser({ nome: "", sobrenome: "", funcao: "", email: "", senha: "" });
+      setNewUser({ nome: "", sobrenome: "", email: "", senha: "", funcao_id: "" });
     } catch (err) {
       console.error(err);
       setError("Erro ao criar usuário");
@@ -91,10 +93,8 @@ export default function Users({ user, onLogout }) {
   return (
     <div className="users-container">
       <TopMenu onLogout={onLogout} active="usuarios" />
-
       <main className="users-main">
         <h1>Gerenciamento de Usuários</h1>
-
         {error && <p className="error">{error}</p>}
 
         {/* Formulário de novo usuário */}
@@ -111,12 +111,15 @@ export default function Users({ user, onLogout }) {
             value={newUser.sobrenome}
             onChange={e => setNewUser(prev => ({ ...prev, sobrenome: e.target.value }))}
           />
-          <input
-            type="text"
-            placeholder="Função"
-            value={newUser.funcao}
-            onChange={e => setNewUser(prev => ({ ...prev, funcao: e.target.value }))}
-          />
+          <select
+            value={newUser.funcao_id}
+            onChange={e => setNewUser(prev => ({ ...prev, funcao_id: e.target.value }))}
+          >
+            <option value="">Selecione a função</option>
+            {funcoes.map(f => (
+              <option key={f.id} value={f.id}>{f.nome_funcao}</option>
+            ))}
+          </select>
           <input
             type="email"
             placeholder="Email"
@@ -152,37 +155,20 @@ export default function Users({ user, onLogout }) {
             <tbody>
               {users.map(u => (
                 <tr key={u.id}>
+                  <td><input value={u.nome || ""} onChange={e => handleChange(u.id, "nome", e.target.value)} /></td>
+                  <td><input value={u.sobrenome || ""} onChange={e => handleChange(u.id, "sobrenome", e.target.value)} /></td>
                   <td>
-                    <input
-                      value={u.nome || ""}
-                      onChange={e => handleChange(u.id, "nome", e.target.value)}
-                    />
+                    <select
+                      value={u.funcao_id || ""}
+                      onChange={e => handleChange(u.id, "funcao_id", e.target.value)}
+                    >
+                      {funcoes.map(f => (
+                        <option key={f.id} value={f.id}>{f.nome_funcao}</option>
+                      ))}
+                    </select>
                   </td>
-                  <td>
-                    <input
-                      value={u.sobrenome || ""}
-                      onChange={e => handleChange(u.id, "sobrenome", e.target.value)}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      value={u.funcao || ""}
-                      onChange={e => handleChange(u.id, "funcao", e.target.value)}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      value={u.email || ""}
-                      onChange={e => handleChange(u.id, "email", e.target.value)}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="password"
-                      value={u.senha || ""}
-                      onChange={e => handleChange(u.id, "senha", e.target.value)}
-                    />
-                  </td>
+                  <td><input value={u.email || ""} onChange={e => handleChange(u.id, "email", e.target.value)} /></td>
+                  <td><input type="password" value={u.senha || ""} onChange={e => handleChange(u.id, "senha", e.target.value)} /></td>
                   <td>
                     <button onClick={() => handleUpdate(u.id)}>Atualizar</button>
                     <button className="delete" onClick={() => handleDelete(u.id)}>Deletar</button>
