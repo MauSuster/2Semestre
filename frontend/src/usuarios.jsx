@@ -3,6 +3,8 @@ import TopMenu from "./TopMenu";
 import axios from "axios";
 import "./css/usuarios.css";
 
+const baseURL = "https://twosemestre.onrender.com/api";
+
 export default function Users({ user, onLogout }) {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -18,8 +20,9 @@ export default function Users({ user, onLogout }) {
   // Carregar usuários da API
   const fetchUsers = async () => {
     setLoading(true);
+    setError("");
     try {
-      const res = await axios.get("http://localhost:5000/api/users");
+      const res = await axios.get(`${baseURL}/users`);
       const usersData = Array.isArray(res.data)
         ? res.data
         : Array.isArray(res.data.users)
@@ -41,9 +44,10 @@ export default function Users({ user, onLogout }) {
   // Criar novo usuário
   const handleCreate = async () => {
     const { nome, sobrenome, funcao, email, senha } = newUser;
-    if (!nome || !sobrenome || !funcao || !email || !senha) return;
+    if (!nome || !sobrenome || !funcao || !email || !senha) return setError("Preencha todos os campos");
+
     try {
-      const res = await axios.post("http://localhost:5000/api/users", newUser);
+      const res = await axios.post(`${baseURL}/users`, newUser);
       setUsers(prev => [...prev, res.data]);
       setNewUser({ nome: "", sobrenome: "", funcao: "", email: "", senha: "" });
     } catch (err) {
@@ -55,9 +59,10 @@ export default function Users({ user, onLogout }) {
   // Atualizar usuário
   const handleUpdate = async id => {
     const updatedUser = users.find(u => u.id === id);
-    if (!updatedUser) return;
+    if (!updatedUser) return setError("Usuário não encontrado");
+
     try {
-      await axios.put(`http://localhost:5000/api/users/${id}`, updatedUser);
+      await axios.put(`${baseURL}/users/${id}`, updatedUser);
       alert("Usuário atualizado!");
     } catch (err) {
       console.error(err);
@@ -68,7 +73,7 @@ export default function Users({ user, onLogout }) {
   // Deletar usuário
   const handleDelete = async id => {
     try {
-      await axios.delete(`http://localhost:5000/api/users/${id}`);
+      await axios.delete(`${baseURL}/users/${id}`);
       setUsers(prev => prev.filter(u => u.id !== id));
     } catch (err) {
       console.error(err);
@@ -98,41 +103,31 @@ export default function Users({ user, onLogout }) {
             type="text"
             placeholder="Nome"
             value={newUser.nome}
-            onChange={e =>
-              setNewUser(prev => ({ ...prev, nome: e.target.value }))
-            }
+            onChange={e => setNewUser(prev => ({ ...prev, nome: e.target.value }))}
           />
           <input
             type="text"
             placeholder="Sobrenome"
             value={newUser.sobrenome}
-            onChange={e =>
-              setNewUser(prev => ({ ...prev, sobrenome: e.target.value }))
-            }
+            onChange={e => setNewUser(prev => ({ ...prev, sobrenome: e.target.value }))}
           />
           <input
             type="text"
             placeholder="Função"
             value={newUser.funcao}
-            onChange={e =>
-              setNewUser(prev => ({ ...prev, funcao: e.target.value }))
-            }
+            onChange={e => setNewUser(prev => ({ ...prev, funcao: e.target.value }))}
           />
           <input
             type="email"
             placeholder="Email"
             value={newUser.email}
-            onChange={e =>
-              setNewUser(prev => ({ ...prev, email: e.target.value }))
-            }
+            onChange={e => setNewUser(prev => ({ ...prev, email: e.target.value }))}
           />
           <input
             type="password"
             placeholder="Senha"
             value={newUser.senha}
-            onChange={e =>
-              setNewUser(prev => ({ ...prev, senha: e.target.value }))
-            }
+            onChange={e => setNewUser(prev => ({ ...prev, senha: e.target.value }))}
           />
           <button onClick={handleCreate}>Criar Usuário</button>
         </div>
@@ -160,52 +155,37 @@ export default function Users({ user, onLogout }) {
                   <td>
                     <input
                       value={u.nome || ""}
-                      onChange={e =>
-                        handleChange(u.id, "nome", e.target.value)
-                      }
+                      onChange={e => handleChange(u.id, "nome", e.target.value)}
                     />
                   </td>
                   <td>
                     <input
                       value={u.sobrenome || ""}
-                      onChange={e =>
-                        handleChange(u.id, "sobrenome", e.target.value)
-                      }
+                      onChange={e => handleChange(u.id, "sobrenome", e.target.value)}
                     />
                   </td>
                   <td>
                     <input
                       value={u.funcao || ""}
-                      onChange={e =>
-                        handleChange(u.id, "funcao", e.target.value)
-                      }
+                      onChange={e => handleChange(u.id, "funcao", e.target.value)}
                     />
                   </td>
                   <td>
                     <input
                       value={u.email || ""}
-                      onChange={e =>
-                        handleChange(u.id, "email", e.target.value)
-                      }
+                      onChange={e => handleChange(u.id, "email", e.target.value)}
                     />
                   </td>
                   <td>
                     <input
                       type="password"
                       value={u.senha || ""}
-                      onChange={e =>
-                        handleChange(u.id, "senha", e.target.value)
-                      }
+                      onChange={e => handleChange(u.id, "senha", e.target.value)}
                     />
                   </td>
                   <td>
                     <button onClick={() => handleUpdate(u.id)}>Atualizar</button>
-                    <button
-                      className="delete"
-                      onClick={() => handleDelete(u.id)}
-                    >
-                      Deletar
-                    </button>
+                    <button className="delete" onClick={() => handleDelete(u.id)}>Deletar</button>
                   </td>
                 </tr>
               ))}
