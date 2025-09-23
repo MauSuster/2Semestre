@@ -12,7 +12,7 @@ import Login from "./Login";
 import HomePage from "./HomePage";  // página pública, visível sem login
 import Home from "./home";          // página interna depois do login
 import Dashboard from "./Dashboard";
-import Usuarios from "./Usuarios";
+import Usuarios from "./usuarios";
 import NotFound from "./NotFound";
 
 import "./css/App.css";
