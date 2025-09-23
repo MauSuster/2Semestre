@@ -141,7 +141,7 @@ export default function Users({ user, onLogout }) {
                     <select value={u.funcao_id || ""} onChange={e => handleChange(u.id, "funcao_id", e.target.value)}>
                       {funcoes.map(f => <option key={f.id} value={f.id}>{f.nome_funcao}</option>)}
                     </select>
-                    <span>{u.funcao_nome}</span>
+                    
                   </td>
                   <td><input value={u.email || ""} onChange={e => handleChange(u.id, "email", e.target.value)} /></td>
                   <td><input type="password" value={u.senha || ""} onChange={e => handleChange(u.id, "senha", e.target.value)} /></td>
