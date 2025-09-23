@@ -10,7 +10,7 @@ import {
 
 import Login from "./Login";
 import HomePage from "./HomePage";  // página pública, visível sem login
-import Home from "./Home";          // página interna depois do login
+import Home from "./home";          // página interna depois do login
 import Dashboard from "./Dashboard";
 import Usuarios from "./Usuarios";
 import NotFound from "./NotFound";
