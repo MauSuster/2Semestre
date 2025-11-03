@@ -1,0 +1,133 @@
+.doacoes-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: #f5f6ff;
+}
+
+.doacoes-main {
+  flex: 1;
+  padding: 2rem 3rem;
+  overflow-y: auto;
+}
+
+.doacoes-main h1 {
+  font-size: 1.9rem;
+  background: linear-gradient(90deg, #7f5af0, #5ca0f2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 2rem;
+}
+
+.msg-card {
+  padding: 1rem 1.2rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+.msg-card.sucesso { background: #ecfdf5; color: #065f46; border-left: 5px solid #10b981; }
+.msg-card.erro { background: #fef2f2; color: #7f1d1d; border-left: 5px solid #ef4444; }
+
+.doacao-form {
+  background: #fff;
+  border-radius: 14px;
+  padding: 1.5rem 2rem;
+  box-shadow: 0 3px 15px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+
+.doacao-form input, 
+.doacao-form select, 
+.doacao-form textarea {
+  padding: 0.9rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+.doacao-form select {
+  width: 100%;
+}
+
+.tipo-row {
+  display: flex;
+  gap: 1.5rem;
+  font-weight: 500;
+  color: #555;
+}
+
+.itens-doacao {
+  background: #f9fafb;
+  padding: 1rem;
+  border-radius: 8px;
+}
+.add-item {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+.add-item input {
+  flex: 1;
+  min-width: 120px;
+}
+.add-item button {
+  background: linear-gradient(90deg, #7f5af0, #5ca0f2);
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 50px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.add-item button:hover { transform: translateY(-2px); }
+
+.itens-lista {
+  margin-top: 0.8rem;
+  list-style: disc;
+  margin-left: 1.2rem;
+  color: #444;
+}
+
+.doacao-form button[type="submit"] {
+  align-self: flex-start;
+  background: linear-gradient(90deg, #7f5af0, #5ca0f2);
+  color: white;
+  border: none;
+  padding: 0.9rem 1.6rem;
+  border-radius: 50px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.doacao-form button[type="submit"]:hover { transform: translateY(-2px); }
+
+.doacoes-lista h2 {
+  font-size: 1.4rem;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.doacoes-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 3px 15px rgba(0,0,0,0.05);
+}
+.doacoes-table th, .doacoes-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+}
+.doacoes-table th {
+  background: #f3f4f6;
+  font-weight: 600;
+  color: #555;
+}
+.sem-doacoes {
+  color: #666;
+  text-align: center;
+}

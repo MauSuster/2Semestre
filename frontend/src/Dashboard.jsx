@@ -1,5 +1,4 @@
-/* Dashboard.tsx */
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   PieChart,
   Pie,
@@ -16,87 +15,115 @@ import {
   Legend,
 } from "recharts";
 import { motion } from "framer-motion";
-import "./css/dashboard.css"; // importa CSS separado
+import "./css/dashboard.css";
 import TopMenu from "./TopMenu";
 
-
 const COLORS = ["#4F46E5", "#06B6D4", "#10B981", "#F59E0B", "#EF4444"];
+const baseURL = "http://localhost:5000/api";
 
-const donationByCategory = [
-  { name: "Educação", value: 4000 },
-  { name: "Saúde", value: 3000 },
-  { name: "Abrigos", value: 2000 },
-  { name: "Animais", value: 1500 },
-  { name: "Outros", value: 800 },
-];
+export default function Dashboard({ user, onLogout }) {
+  const [doacoes, setDoacoes] = useState([]);
+  const [eventos, setEventos] = useState([]);
+  const [usuarios, setUsuarios] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-const donationsByMonth = [
-  { month: "Jan", amount: 1200 },
-  { month: "Feb", amount: 2100 },
-  { month: "Mar", amount: 800 },
-  { month: "Apr", amount: 1600 },
-  { month: "May", amount: 2500 },
-  { month: "Jun", amount: 3000 },
-  { month: "Jul", amount: 2800 },
-  { month: "Aug", amount: 3200 },
-  { month: "Sep", amount: 4000 },
-];
+  useEffect(() => {
+    async function fetchAll() {
+      try {
+        const [doacoesRes, eventosRes, usersRes] = await Promise.all([
+          fetch(`${baseURL}/doacoes`).then((r) => r.json()),
+          fetch(`${baseURL}/eventos`).then((r) => r.json()),
+          fetch(`${baseURL}/users`).then((r) => r.json()),
+        ]);
+        setDoacoes(doacoesRes);
+        setEventos(eventosRes);
+        setUsuarios(usersRes);
+      } catch (err) {
+        console.error("Erro ao carregar dados:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchAll();
+  }, []);
 
-const donationsByChannel = [
-  { channel: "Online", amount: 8000 },
-  { channel: "Evento", amount: 3500 },
-  { channel: "Transferência", amount: 2200 },
-];
+  if (loading) return <div className="dashboard-container"><TopMenu onLogout={onLogout} active="dashboard" /><p style={{ textAlign: "center", marginTop: "3rem" }}>Carregando...</p></div>;
 
-export default function Dashboard({user, onLogout}) {
-  const total = donationByCategory.reduce((s, c) => s + c.value, 0);
-  const donors = 1284;
-  const avg = (total / donors).toFixed(2);
-  const goal = 20000;
-  const progress = Math.min(100, Math.round((total / goal) * 100));
+  // === Cálculos ===
+  const doacoesDinheiro = doacoes.filter((d) => d.tipo_doacao === "dinheiro");
+  const totalArrecadado = doacoesDinheiro.reduce((sum, d) => sum + (Number(d.valor) || 0), 0);
+  const totalDoadores = new Set(doacoes.map((d) => d.id_usuario)).size;
+  const mediaDoacao = totalDoadores > 0 ? (totalArrecadado / totalDoadores).toFixed(2) : 0;
+  const meta = 20000;
+  const progresso = Math.min(100, Math.round((totalArrecadado / meta) * 100));
+
+  // === Gráfico 1: Total por Evento ===
+  const porEvento = eventos.map((ev) => {
+    const total = doacoesDinheiro
+      .filter((d) => d.id_evento === ev.id_evento)
+      .reduce((sum, d) => sum + (Number(d.valor) || 0), 0);
+    return { name: ev.nome_evento, value: total };
+  });
+
+  // === Gráfico 2: Evolução Mensal ===
+  const porMes = {};
+  doacoesDinheiro.forEach((d) => {
+    const data = new Date(d.data_doacao);
+    const mes = data.toLocaleString("pt-BR", { month: "short" });
+    porMes[mes] = (porMes[mes] || 0) + Number(d.valor);
+  });
+  const porMesData = Object.entries(porMes).map(([month, amount]) => ({ month, amount }));
+
+  // === Gráfico 3: Tipos de Doação ===
+  const tipos = [
+    { name: "Dinheiro", value: doacoes.filter((d) => d.tipo_doacao === "dinheiro").length },
+    { name: "Alimento", value: doacoes.filter((d) => d.tipo_doacao === "alimento").length },
+  ];
 
   return (
     <div className="dashboard-container">
       <TopMenu onLogout={onLogout} active="dashboard" />
       <main>
         <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+          {/* === Cards Principais === */}
           <section className="cards-grid">
             <div className="card">
               <div className="label">Total arrecadado</div>
-              <div className="value">R$ {total.toLocaleString()}</div>
-              <div className="small">Meta: R$ {goal.toLocaleString()} ({progress}%)</div>
+              <div className="value">R$ {totalArrecadado.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</div>
+              <div className="small">Meta: R$ {meta.toLocaleString()} ({progresso}%)</div>
               <div className="progress-bar">
-                <div className="progress" style={{ width: `${progress}%` }} />
+                <div className="progress" style={{ width: `${progresso}%` }} />
               </div>
             </div>
 
             <div className="card">
-              <div className="label">Doadores</div>
-              <div className="value">{donors}</div>
-              <div className="small">Novos este mês: 124</div>
+              <div className="label">Total de doadores</div>
+              <div className="value">{totalDoadores}</div>
+              <div className="small">Usuários ativos: {usuarios.length}</div>
             </div>
 
             <div className="card">
               <div className="label">Doação média</div>
-              <div className="value">R$ {avg}</div>
-              <div className="small">Base: {donors} doadores</div>
+              <div className="value">R$ {mediaDoacao}</div>
+              <div className="small">Base: {totalDoadores} doadores</div>
             </div>
 
             <div className="card">
-              <div className="label">Campanhas ativas</div>
-              <div className="value">5</div>
-              <div className="small">Última: Refeição Solidária</div>
+              <div className="label">Eventos ativos</div>
+              <div className="value">{eventos.length}</div>
+              <div className="small">Último: {eventos[0]?.nome_evento || "Nenhum"}</div>
             </div>
           </section>
 
+          {/* === Gráficos === */}
           <section className="charts-grid">
             <div className="chart card">
-              <h3>Doações por categoria</h3>
+              <h3>Doações por tipo</h3>
               <div className="chart-container">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
-                    <Pie data={donationByCategory} dataKey="value" nameKey="name" outerRadius={80}>
-                      {donationByCategory.map((entry, index) => (
+                    <Pie data={tipos} dataKey="value" nameKey="name" outerRadius={80}>
+                      {tipos.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
@@ -107,10 +134,10 @@ export default function Dashboard({user, onLogout}) {
             </div>
 
             <div className="chart-large card">
-              <h3>Arrecadação por mês</h3>
+              <h3>Arrecadação mensal</h3>
               <div className="chart-container-large">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={donationsByMonth}>
+                  <LineChart data={porMesData}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="month" />
                     <YAxis />
@@ -123,16 +150,16 @@ export default function Dashboard({user, onLogout}) {
             </div>
 
             <div className="chart-wide card">
-              <h3>Doações por canal</h3>
+              <h3>Arrecadação por evento</h3>
               <div className="chart-container">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={donationsByChannel}>
+                  <BarChart data={porEvento}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="channel" />
+                    <XAxis dataKey="name" />
                     <YAxis />
                     <ReTooltip />
-                    <Bar dataKey="amount" barSize={50}>
-                      {donationsByChannel.map((entry, index) => (
+                    <Bar dataKey="value" barSize={50}>
+                      {porEvento.map((entry, index) => (
                         <Cell key={`bar-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Bar>
@@ -146,108 +173,3 @@ export default function Dashboard({user, onLogout}) {
     </div>
   );
 }
-
-/* Dashboard.css (coloque este arquivo em src/Dashboard.css)
-.dashboard-container {
-  height: 100vh;
-  width: 100vw;
-  background-color: #f9fafb;
-  padding: 2rem;
-  overflow: auto;
-}
-.top-menu .nav-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: white;
-  padding: 1rem 2rem;
-  border-radius: 0.5rem;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  margin-bottom: 2rem;
-}
-.brand {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #4F46E5;
-}
-.nav-links {
-  display: flex;
-  gap: 1rem;
-  margin-left: 1rem;
-}
-.nav-links li {
-  cursor: pointer;
-  color: #4b5563;
-}
-.nav-links li.active {
-  color: #4F46E5;
-  font-weight: 600;
-}
-.nav-right button {
-  margin-left: 1rem;
-  padding: 0.3rem 0.75rem;
-  border-radius: 0.25rem;
-}
-.logout-btn {
-  background: #ef4444;
-  color: white;
-  border: none;
-}
-.cards-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
-.card {
-  background: white;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-}
-.card .label {
-  font-size: 0.9rem;
-  color: #6b7280;
-}
-.card .value {
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-top: 0.5rem;
-}
-.card .small {
-  font-size: 0.75rem;
-  color: #9ca3af;
-  margin-top: 0.25rem;
-}
-.progress-bar {
-  width: 100%;
-  height: 0.5rem;
-  background: #e5e7eb;
-  border-radius: 0.25rem;
-  margin-top: 0.5rem;
-}
-.progress {
-  height: 0.5rem;
-  background: linear-gradient(90deg,#4F46E5,#06B6D4);
-  border-radius: 0.25rem;
-}
-.charts-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
-}
-@media(min-width: 1024px){
-  .charts-grid {
-    grid-template-columns: 1fr 2fr;
-  }
-}
-.chart-container, .chart-container-large {
-  height: 260px;
-}
-.chart-container-large {
-  height: 300px;
-}
-.chart-wide {
-  grid-column: span 2;
-}
-*/

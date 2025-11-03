@@ -1,13 +1,22 @@
-import { Link } from "react-router-dom";
+// src/TopMenu.jsx
+import { Link, useNavigate } from "react-router-dom";
 import "./css/TopMenu.css";
+import { useAuth } from "./context/AuthContext";
 
+export default function TopMenu({ active = "home" }) {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
 
-export default function TopMenu({ onLogout, active = "home" }) {
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
+
   return (
     <header className="top-menu">
       <nav className="nav-bar">
         <div className="nav-left">
-          <div className="brand">DoaDash</div>
+          <div className="brand">DoaCore</div>
           <ul className="nav-links">
             <li className={active === "home" ? "active" : ""}>
               <Link to="/home">Home</Link>
@@ -18,11 +27,25 @@ export default function TopMenu({ onLogout, active = "home" }) {
             <li className={active === "usuarios" ? "active" : ""}>
               <Link to="/usuarios">Usuários</Link>
             </li>
+            <li className={active === "equipes" ? "active" : ""}>
+              <Link to="/equipes">Equipes</Link>
+            </li>
+            <li className={active === "eventos" ? "active" : ""}>
+              <Link to="/eventos">Eventos</Link>
+            </li>
+            <li className={active === "doacoes" ? "active" : ""}>
+              <Link to="/doacoes">Doações</Link>
+            </li>
           </ul>
         </div>
+
         <div className="nav-right">
-          <button className="profile-btn">Perfil</button>
-          <button className="logout-btn" onClick={onLogout}>Sair</button>
+          <Link className="btn" to="/perfil">
+            Perfil
+          </Link>
+          <button className="logout-btn" onClick={handleLogout}>
+            Sair
+          </button>
         </div>
       </nav>
     </header>

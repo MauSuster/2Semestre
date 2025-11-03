@@ -1,49 +1,91 @@
-// Login.jsx
 import { useState, useEffect } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { useAuth } from "./context/AuthContext";
 import "./css/Login.css";
 
-function Login({ user, setUser }) {
+function Login() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const [nome, setNome] = useState("");
+  const [sobrenome, setSobrenome] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate();
+  const [success, setSuccess] = useState("");
+  const [isCadastro, setIsCadastro] = useState(false);
 
-  // Se já estiver logado, redireciona para o dashboard
+  const { user, login, register } = useAuth();
+
   useEffect(() => {
     if (user) {
-      navigate("/home");
+      window.location.href = "/home";
     }
-  }, [user, navigate]);
+  }, [user]);
 
   const handleLogin = async () => {
-    setError("");
-
     try {
-      const res = await axios.post("https://twosemestre.onrender.com/api/login", {
-        email,
-        senha,
-      });
-
-      // salva usuário no state (App.jsx vai persistir no localStorage)
-      setUser(res.data);
-
-      // navega para o dashboard
-      navigate("/home");
-    } catch (err) {
-      console.error(err);
+      await login(email, senha);
+    } catch {
       setError("Email ou senha incorretos!");
     }
   };
 
+  const handleCadastro = async () => {
+    if (!nome || !sobrenome || !email || !senha) {
+      setError("Preencha todos os campos!");
+      return;
+    }
+
+    try {
+      await register({ nome, sobrenome, email, senha, funcao_id: 2 });
+      setSuccess("Cadastro realizado! Faça login para continuar.");
+      setIsCadastro(false);
+      setEmail("");
+      setSenha("");
+      setNome("");
+      setSobrenome("");
+    } catch {
+      setError("Erro ao cadastrar usuário.");
+    }
+  };
+
   return (
-    <div className="login-wrapper">
-      <div className="login-card">
-        <h1 className="login-title">Bem-vindo(a)</h1>
-        <p className="login-subtitle">Faça login para continuar</p>
+    <motion.div
+      className="login-wrapper"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      <div className={`login-card ${isCadastro ? "cadastro-mode" : ""}`}>
+        {/* LOGO / NOME */}
+        <h1 className="login-logo">Lideranças Empáticas</h1>
+
+        <h2 className="login-title">
+          {isCadastro ? "Crie sua Conta" : "Bem-vindo(a) de volta!"}
+        </h2>
+        <p className="login-subtitle">
+          {isCadastro
+            ? "Preencha seus dados para se cadastrar"
+            : "Acesse sua conta e continue ajudando quem mais precisa"}
+        </p>
 
         <div className="login-form">
+          {isCadastro && (
+            <>
+              <input
+                className="login-input"
+                type="text"
+                placeholder="Nome"
+                value={nome}
+                onChange={(e) => setNome(e.target.value)}
+              />
+              <input
+                className="login-input"
+                type="text"
+                placeholder="Sobrenome"
+                value={sobrenome}
+                onChange={(e) => setSobrenome(e.target.value)}
+              />
+            </>
+          )}
           <input
             className="login-input"
             type="email"
@@ -58,13 +100,38 @@ function Login({ user, setUser }) {
             value={senha}
             onChange={(e) => setSenha(e.target.value)}
           />
+
           {error && <p className="login-error">{error}</p>}
-          <button className="login-button" onClick={handleLogin}>
-            Entrar
+          {success && <p className="login-success">{success}</p>}
+
+          <button
+            className="login-button"
+            onClick={isCadastro ? handleCadastro : handleLogin}
+          >
+            {isCadastro ? "Cadastrar" : "Entrar"}
           </button>
         </div>
+
+        <div className="toggle-section">
+          {isCadastro ? (
+            <p>
+              Já tem uma conta?{" "}
+              <span onClick={() => setIsCadastro(false)}>Entrar</span>
+            </p>
+          ) : (
+            <p>
+              Ainda não tem conta?{" "}
+              <span onClick={() => setIsCadastro(true)}>Cadastre-se</span>
+            </p>
+          )}
+        </div>
+
+        {/* RODAPÉ INSTITUCIONAL */}
+        <p className="login-footer">
+          © {new Date().getFullYear()} Lideranças Empáticas — Unidos por um Brasil mais solidário 💜
+        </p>
       </div>
-    </div>
+    </motion.div>
   );
 }
 

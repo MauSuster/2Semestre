@@ -1,49 +1,242 @@
-.home-container,
-.dashboard-container {
-  padding: 2rem;
-  min-height: 100vh; /* ocupa toda a altura da viewport */
-  width: 100vw;      /* ocupa toda a largura da viewport */
-  box-sizing: border-box; /* inclui padding na largura/altura */
-  background: #f9f9f9;
-}
+/* ======================================= */
+/* HOME INTERNA — estilo institucional     */
+/* ======================================= */
 
-.home-cards,
-.dashboard-cards {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-h1 {
-  font-size: 2rem;
-  margin-bottom: 1rem;
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #f5f6ff;
+  font-family: "Poppins", sans-serif;
   color: #333;
 }
 
-h2{
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-  color: #555;
+.home-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;          /* 🔹 agora ocupa a tela inteira */
+  width: 100vw;           /* 🔹 largura total */
+  background-color: #f5f6ff;
+  overflow: hidden;
 }
-p{
+
+/* MAIN */
+.home-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;     /* centraliza horizontalmente */
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;        /* 🔹 permite rolar se o conteúdo for maior */
+  padding: 2rem 4%;
+  box-sizing: border-box;
+}
+
+.home-content {
+  width: 100%;
+  max-width: 1400px;       /* 🔹 conteúdo centralizado, mas usando toda a tela */
+}
+
+/* ==================== */
+/* Boas-vindas          */
+/* ==================== */
+
+.welcome-card {
+  background: white;
+  padding: 2.5rem 3rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.welcome-card h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #7f5af0, #5ca0f2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0.8rem;
+}
+
+.welcome-card p {
   font-size: 1rem;
   color: #555;
-  margin-bottom: 2rem;
-}
-.card {
-  background: white;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  flex: 1;
-  min-width: 200px;
+  line-height: 1.6;
 }
 
-button {
-  cursor: pointer;
-  transition: background 0.2s;
+/* ==================== */
+/* Métricas rápidas     */
+/* ==================== */
+
+.stats-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  width: 100%;
+  margin-bottom: 3rem;
 }
 
-button:hover {
+.stat-card {
+  background: linear-gradient(135deg, #7f5af0, #5ca0f2);
+  color: white;
+  border-radius: 14px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  box-shadow: 0 4px 14px rgba(127, 90, 240, 0.2);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 22px rgba(127, 90, 240, 0.25);
+}
+
+.stat-card h2 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+
+.stat-card p {
+  font-size: 1rem;
   opacity: 0.9;
+}
+
+/* ==================== */
+/* Atalhos              */
+/* ==================== */
+
+.quick-links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  width: 100%;
+  margin-bottom: 3rem;
+}
+
+.card-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.card {
+  background-color: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+  border-top: 4px solid #7f5af0;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  height: 100%;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 5px 16px rgba(0, 0, 0, 0.08);
+}
+
+.card h3 {
+  color: #6a4de8;
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-bottom: 0.6rem;
+}
+
+.card p {
+  color: #555;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* ==================== */
+/* Campanhas recentes   */
+/* ==================== */
+
+.campaign-section {
+  margin-top: 2rem;
+  width: 100%;
+}
+
+.campaign-section h2 {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 1.5rem;
+}
+
+.campaign-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  width: 100%;
+}
+
+.campaign-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+  border-left: 5px solid #7f5af0;
+  transition: all 0.25s ease;
+}
+
+.campaign-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+.campaign-card h4 {
+  font-size: 1.2rem;
+  color: #6a4de8;
+  margin-bottom: 0.6rem;
+}
+
+.campaign-card p {
+  color: #555;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+/* Botão */
+.btn-secondary {
+  background-color: #6a4de8;
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  padding: 0.7rem 1.4rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background-color: #5ca0f2;
+  box-shadow: 0 0 12px rgba(92, 160, 242, 0.4);
+}
+
+/* ==================== */
+/* Responsividade       */
+/* ==================== */
+
+@media (max-width: 768px) {
+  .home-main {
+    padding: 1.5rem;
+  }
+
+  .welcome-card {
+    padding: 1.5rem;
+  }
+
+  .stat-card h2 {
+    font-size: 1.8rem;
+  }
+
+  .campaign-list {
+    grid-template-columns: 1fr;
+  }
 }
