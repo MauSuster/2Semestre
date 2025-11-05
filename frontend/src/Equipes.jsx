@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import TopMenu from "./TopMenu";
-import "./css/equipes.css";
+import "./css/Equipes.css";
 
 export default function Equipes({ user, onLogout }) {
   const [equipes, setEquipes] = useState([]);
