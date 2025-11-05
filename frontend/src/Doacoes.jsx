@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import TopMenu from "./TopMenu";
-import "./css/doacoes.css";
+import "./css/Doacoes.css";
 
 export default function Doacoes({ user, onLogout }) {
   const baseURL = "http://localhost:5000/api";
