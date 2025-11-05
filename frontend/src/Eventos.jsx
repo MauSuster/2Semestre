@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import TopMenu from "./TopMenu";
-import "./css/eventos.css";
+import "./css/Eventos.css";
 
 export default function Eventos({ user, onLogout }) {
   const [eventos, setEventos] = useState([]);
