@@ -4,7 +4,7 @@ import TopMenu from "./TopMenu";
 import "./css/Doacoes.css";
 
 export default function Doacoes({ user, onLogout }) {
-  const baseURL = "http://localhost:5000/api";
+  const baseURL = "https://2-semestre-sr2r.vercel.app/api"; 
   const [doacoes, setDoacoes] = useState([]);
   const [eventos, setEventos] = useState([]);
   const [nova, setNova] = useState({

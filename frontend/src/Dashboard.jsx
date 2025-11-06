@@ -19,7 +19,7 @@ import "./css/dashboard.css";
 import TopMenu from "./TopMenu";
 
 const COLORS = ["#4F46E5", "#06B6D4", "#10B981", "#F59E0B", "#EF4444"];
-const baseURL = "http://localhost:5000/api";
+const baseURL = "https://2-semestre-sr2r.vercel.app/api";
 
 export default function Dashboard({ user, onLogout }) {
   const [doacoes, setDoacoes] = useState([]);

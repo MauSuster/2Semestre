@@ -4,7 +4,7 @@ import axios from "axios";
 import "./css/usuarios.css";
 import { motion, AnimatePresence } from "framer-motion";
 
-const baseURL = "http://localhost:5000/api";
+const baseURL = "https://2-semestre-sr2r.vercel.app/api";
 
 export default function Users() {
   const [users, setUsers] = useState([]);

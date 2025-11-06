@@ -4,6 +4,7 @@ import TopMenu from "./TopMenu";
 import "./css/Equipes.css";
 
 export default function Equipes({ user, onLogout }) {
+  const baseURL = "https://2-semestre-sr2r.vercel.app/api";
   const [equipes, setEquipes] = useState([]);
   const [usuarios, setUsuarios] = useState([]);
   const [membros, setMembros] = useState({});
@@ -18,19 +19,19 @@ export default function Equipes({ user, onLogout }) {
   }, []);
 
   async function carregarEquipes() {
-    const res = await fetch("http://localhost:5000/api/equipes");
+    const res = await fetch(`${baseURL}/equipes`);
     const data = await res.json();
     setEquipes(data);
   }
 
   async function carregarUsuarios() {
-    const res = await fetch("http://localhost:5000/api/users");
+    const res = await fetch(`${baseURL}/users`);
     const data = await res.json();
     setUsuarios(data);
   }
 
   async function carregarMembros(idEquipe) {
-    const res = await fetch(`http://localhost:5000/api/equipes/${idEquipe}/membros`);
+    const res = await fetch(`${baseURL}/equipes/${idEquipe}/membros`);
     const data = await res.json();
     setMembros((prev) => ({ ...prev, [idEquipe]: data }));
   }
@@ -56,7 +57,7 @@ export default function Equipes({ user, onLogout }) {
       return;
     }
 
-    const res = await fetch("http://localhost:5000/api/equipes", {
+    const res = await fetch(`${baseURL}/equipes`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -77,7 +78,7 @@ export default function Equipes({ user, onLogout }) {
 
   async function excluirEquipe(idEquipe) {
     if (!window.confirm("Deseja realmente excluir esta equipe?")) return;
-    const res = await fetch(`http://localhost:5000/api/equipes/${idEquipe}`, {
+    const res = await fetch(`${baseURL}/equipes/${idEquipe}`, {
       method: "DELETE",
     });
 
@@ -106,7 +107,7 @@ export default function Equipes({ user, onLogout }) {
       return;
     }
 
-    const res = await fetch(`http://localhost:5000/api/equipes/${idEquipe}/membros`, {
+    const res = await fetch(`${baseURL}/equipes/${idEquipe}/membros`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id_usuario }),
@@ -120,7 +121,7 @@ export default function Equipes({ user, onLogout }) {
 
   async function removerMembro(idEquipe, idUsuario) {
     const res = await fetch(
-      `http://localhost:5000/api/equipes/${idEquipe}/membros/${idUsuario}`,
+      `${baseURL}/equipes/${idEquipe}/membros/${idUsuario}`,
       { method: "DELETE" }
     );
 
