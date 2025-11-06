@@ -1,5 +1,5 @@
 import React from "react";
-import "./css/home.css";
+import "./css/Home.css";
 import TopMenu from "./TopMenu";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
