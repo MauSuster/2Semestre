@@ -5,7 +5,7 @@ import Login from "./Login";
 import HomePage from "./HomePage";
 import Home from "./home";
 import Dashboard from "./Dashboard";
-import Usuarios from "./Usuarios";
+import Usuarios from "./usuarios";
 import Equipes from "./Equipes";
 import NotFound from "./NotFound";
 import Eventos from "./Eventos";
