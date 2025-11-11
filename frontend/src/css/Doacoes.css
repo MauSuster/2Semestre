@@ -1,133 +1,207 @@
 .doacoes-container {
+  background: #f9fafb;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  background: #f5f6ff;
 }
 
 .doacoes-main {
   flex: 1;
-  padding: 2rem 3rem;
-  overflow-y: auto;
+  display: flex;
+  justify-content: center;
+  padding: 3rem 2rem;
 }
 
-.doacoes-main h1 {
-  font-size: 1.9rem;
-  background: linear-gradient(90deg, #7f5af0, #5ca0f2);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin-bottom: 2rem;
+.doacoes-content {
+  width: 100%;
+  max-width: 1200px;
 }
 
+h1 {
+  font-size: 1.8rem;
+  color: #1e1e2f;
+  margin-bottom: 1rem;
+}
+
+/* ==========================================
+   MENSAGEM DE STATUS
+========================================== */
 .msg-card {
-  padding: 1rem 1.2rem;
+  padding: 0.8rem 1.2rem;
   border-radius: 8px;
   margin-bottom: 1rem;
   font-weight: 500;
 }
-.msg-card.sucesso { background: #ecfdf5; color: #065f46; border-left: 5px solid #10b981; }
-.msg-card.erro { background: #fef2f2; color: #7f1d1d; border-left: 5px solid #ef4444; }
 
+.msg-card.sucesso {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.msg-card.erro {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+/* ==========================================
+   FORMULÁRIO DE DOAÇÃO
+========================================== */
 .doacao-form {
   background: #fff;
   border-radius: 14px;
-  padding: 1.5rem 2rem;
-  box-shadow: 0 3px 15px rgba(0,0,0,0.05);
+  padding: 2rem;
+  margin-bottom: 3rem;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  margin-bottom: 2.5rem;
 }
 
-.doacao-form input, 
-.doacao-form select, 
+.doacao-form select,
+.doacao-form input,
 .doacao-form textarea {
-  padding: 0.9rem;
   border: 1px solid #ddd;
   border-radius: 8px;
+  padding: 0.8rem;
   font-size: 0.95rem;
+  outline: none;
 }
 
-.doacao-form select {
-  width: 100%;
+.doacao-form select:focus,
+.doacao-form input:focus,
+.doacao-form textarea:focus {
+  border-color: #4f46e5;
 }
 
 .tipo-row {
   display: flex;
-  gap: 1.5rem;
+  gap: 2rem;
+  align-items: center;
   font-weight: 500;
-  color: #555;
 }
 
 .itens-doacao {
-  background: #f9fafb;
+  background: #f9f9ff;
+  border: 1px solid #e0e0ff;
+  border-radius: 10px;
   padding: 1rem;
-  border-radius: 8px;
 }
+
 .add-item {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.7rem;
+  gap: 0.6rem;
+  margin-bottom: 0.8rem;
 }
+
 .add-item input {
   flex: 1;
-  min-width: 120px;
 }
-.add-item button {
-  background: linear-gradient(90deg, #7f5af0, #5ca0f2);
+
+.btn-add {
+  background: #4f46e5;
   color: white;
   border: none;
-  padding: 0.6rem 1.2rem;
-  border-radius: 50px;
+  border-radius: 8px;
+  padding: 0 1rem;
   font-weight: 600;
   cursor: pointer;
 }
-.add-item button:hover { transform: translateY(-2px); }
 
 .itens-lista {
-  margin-top: 0.8rem;
-  list-style: disc;
-  margin-left: 1.2rem;
-  color: #444;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
-.doacao-form button[type="submit"] {
-  align-self: flex-start;
-  background: linear-gradient(90deg, #7f5af0, #5ca0f2);
+.itens-lista li {
+  background: white;
+  border-radius: 6px;
+  padding: 0.4rem 0.8rem;
+  margin-bottom: 0.4rem;
+  border: 1px solid #eee;
+}
+
+.btn-primary {
+  background: #4f46e5;
   color: white;
   border: none;
-  padding: 0.9rem 1.6rem;
-  border-radius: 50px;
+  border-radius: 8px;
+  padding: 0.8rem 1.4rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background 0.2s ease;
 }
-.doacao-form button[type="submit"]:hover { transform: translateY(-2px); }
 
+.btn-primary:hover {
+  background: #4338ca;
+}
+
+/* ==========================================
+   TABELA DE DOAÇÕES
+========================================== */
 .doacoes-lista h2 {
-  font-size: 1.4rem;
-  color: #333;
   margin-bottom: 1rem;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
 }
 
 .doacoes-table {
   width: 100%;
   border-collapse: collapse;
-  background: white;
-  border-radius: 14px;
-  box-shadow: 0 3px 15px rgba(0,0,0,0.05);
+  min-width: 700px;
 }
-.doacoes-table th, .doacoes-table td {
-  padding: 1rem;
-  border-bottom: 1px solid #eee;
+
+.doacoes-table th,
+.doacoes-table td {
+  padding: 0.9rem 1rem;
   text-align: left;
+  border-bottom: 1px solid #eee;
 }
+
 .doacoes-table th {
   background: #f3f4f6;
   font-weight: 600;
-  color: #555;
+  color: #333;
 }
+
+.doacoes-table tr:hover {
+  background: #fafafa;
+}
+
+.doacoes-table td.alimento {
+  color: #10b981;
+  font-weight: 600;
+}
+
+.doacoes-table td.dinheiro {
+  color: #2563eb;
+  font-weight: 600;
+}
+
 .sem-doacoes {
-  color: #666;
-  text-align: center;
+  color: #555;
+  font-style: italic;
+}
+
+/* ==========================================
+   RESPONSIVO
+========================================== */
+@media (max-width: 768px) {
+  .doacoes-main {
+    padding: 2rem 1rem;
+  }
+
+  .doacao-form {
+    padding: 1.4rem;
+  }
+
+  .doacoes-table th,
+  .doacoes-table td {
+    font-size: 0.85rem;
+  }
 }

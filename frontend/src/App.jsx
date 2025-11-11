@@ -1,24 +1,34 @@
-// src/App.jsx
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
 
 import Login from "./Login";
 import HomePage from "./HomePage";
-import Home from "./home";
+import Home from "./Home";
 import Dashboard from "./Dashboard";
-import Usuarios from "./usuarios";
+import Usuarios from "./Usuarios";
 import Equipes from "./Equipes";
 import NotFound from "./NotFound";
-import Eventos from "./Eventos";  
+import Eventos from "./Eventos";
 import Doacoes from "./Doacoes";
 
 import "./css/App.css";
 
+// === Rota Privada Simples ===
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth();
 
   if (loading) return <div>Carregando...</div>;
   return user ? children : <Navigate to="/login" replace />;
+}
+
+// === Rota Privada com Restrição por Função ===
+function RoleRoute({ roles, children }) {
+  const { user } = useAuth();
+
+  if (!user) return <Navigate to="/login" replace />;
+  if (roles && !roles.includes(user.funcao)) return <Navigate to="/home" replace />;
+
+  return children;
 }
 
 export default function App() {
@@ -38,7 +48,7 @@ export default function App() {
         element={user ? <Navigate to="/home" replace /> : <Login />}
       />
 
-      {/* Rotas privadas */}
+      {/* === Rotas privadas === */}
       <Route
         path="/home"
         element={
@@ -47,6 +57,7 @@ export default function App() {
           </PrivateRoute>
         }
       />
+
       <Route
         path="/dashboard"
         element={
@@ -55,30 +66,37 @@ export default function App() {
           </PrivateRoute>
         }
       />
+
+      {/* 🔐 Somente ADMIN */}
       <Route
         path="/usuarios"
         element={
-          <PrivateRoute>
+          <RoleRoute roles={["Administrador"]}>
             <Usuarios />
-          </PrivateRoute>
+          </RoleRoute>
         }
       />
+
+      {/* 🔐 ADMIN e ORGANIZADOR */}
       <Route
         path="/equipes"
         element={
-          <PrivateRoute>
+          <RoleRoute roles={["Administrador", "Organizador"]}>
             <Equipes />
-          </PrivateRoute>
+          </RoleRoute>
         }
       />
+
+      {/* 🔓 Acesso livre a todos os logados */}
       <Route
         path="/eventos"
         element={
-          <PrivateRoute>
+          <RoleRoute roles={["Administrador", "Organizador"]}>
             <Eventos />
-          </PrivateRoute>
+          </RoleRoute>
         }
       />
+
       <Route
         path="/doacoes"
         element={

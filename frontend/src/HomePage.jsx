@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import "./css/HomePage.css";
 import { motion } from "framer-motion";
 
+
 function HomePage({ user, onLogout }) {
   return (
     <div className="home">

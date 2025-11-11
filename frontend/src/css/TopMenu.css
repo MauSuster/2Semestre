@@ -1,165 +1,138 @@
-/* ======================================= */
-/* TOP MENU — estilo institucional moderno */
-/* ======================================= */
-
+/* ================================
+   TOP MENU — Layout principal
+================================== */
 .top-menu {
+  background: #ffffff;
   width: 100%;
-  background-color: #fff;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   position: sticky;
   top: 0;
-  z-index: 1000;
+  z-index: 100;
 }
 
-/* NAVBAR */
 .nav-bar {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: 1rem 5%;
-  height: 70px;
-  box-sizing: border-box;
-}
-
-/* LADO ESQUERDO */
-.nav-left {
-  display: flex;
   align-items: center;
-  gap: 2rem;
+  padding: 1rem 3rem;
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
 }
 
 .brand {
-  font-weight: 700;
   font-size: 1.5rem;
-  background: linear-gradient(90deg, #7f5af0, #5ca0f2);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+  color: #4f46e5;
   letter-spacing: 0.5px;
 }
 
+/* ================================
+   LINKS
+================================== */
 .nav-links {
-  list-style: none;
   display: flex;
   gap: 1.8rem;
+  align-items: center;
+  margin-left: 2rem;
 }
 
-.nav-links li a {
+.nav-links li {
+  list-style: none;
+}
+
+.nav-links a {
+  color: #444;
   text-decoration: none;
-  color: #555;
   font-weight: 500;
-  font-size: 0.95rem;
-  transition: color 0.3s ease, transform 0.2s ease;
-  position: relative;
+  transition: color 0.2s ease;
 }
 
-/* Hover e ativo */
-.nav-links li a:hover {
-  color: #7f5af0;
+.nav-links li.active a,
+.nav-links a:hover {
+  color: #4f46e5;
 }
 
-.nav-links li.active a {
-  color: #7f5af0;
-  font-weight: 600;
-}
-
-.nav-links li.active a::after {
-  content: "";
-  position: absolute;
-  bottom: -6px;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background: linear-gradient(90deg, #7f5af0, #5ca0f2);
-  border-radius: 2px;
-}
-
-/* LADO DIREITO */
+/* ================================
+   USER INFO (lado direito)
+================================== */
 .nav-right {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.5rem;
 }
 
-/* BOTÃO DE PERFIL */
-.btn {
-  background: linear-gradient(90deg, #7f5af0, #5ca0f2);
-  color: white;
-  padding: 0.6rem 1.2rem;
-  border-radius: 50px;
-  font-size: 0.9rem;
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  line-height: 1.1;
+}
+
+.user-name {
   font-weight: 600;
-  text-decoration: none;
-  transition: all 0.3s ease;
+  color: #1e1e2f;
 }
 
-.btn:hover {
-  background: linear-gradient(90deg, #5ca0f2, #7f5af0);
-  box-shadow: 0 4px 15px rgba(127, 90, 240, 0.3);
-  transform: translateY(-2px);
+.user-role {
+  font-size: 0.85rem;
+  color: #6a4de8;
+  font-weight: 500;
 }
 
-/* BOTÃO SAIR */
+/* ================================
+   BOTÕES
+================================== */
 .logout-btn {
-  background-color: transparent;
-  border: 2px solid #7f5af0;
-  color: #7f5af0;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 6px;
   padding: 0.6rem 1.2rem;
-  border-radius: 50px;
-  font-weight: 600;
-  font-size: 0.9rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  font-weight: 500;
+  transition: background 0.2s ease, transform 0.1s ease;
 }
 
 .logout-btn:hover {
-  background: linear-gradient(90deg, #7f5af0, #5ca0f2);
-  color: white;
-  box-shadow: 0 4px 15px rgba(127, 90, 240, 0.25);
-  transform: translateY(-2px);
+  background: #dc2626;
+  transform: translateY(-1px);
 }
 
-/* ======================================= */
-/* RESPONSIVIDADE                         */
-/* ======================================= */
+.btn {
+  background: #4f46e5;
+  color: #fff;
+  text-decoration: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
 
+.btn:hover {
+  background: #4338ca;
+  transform: translateY(-1px);
+}
+
+/* ================================
+   RESPONSIVO
+================================== */
 @media (max-width: 900px) {
   .nav-bar {
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
     padding: 1rem 1.5rem;
-    height: auto;
-  }
-
-  .nav-left {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-    width: 100%;
   }
 
   .nav-links {
     flex-wrap: wrap;
     gap: 1rem;
+    margin-left: 0;
   }
 
-  .nav-right {
-    width: 100%;
-    justify-content: flex-start;
-  }
-}
-
-@media (max-width: 500px) {
-  .brand {
-    font-size: 1.3rem;
-  }
-
-  .nav-links li a {
-    font-size: 0.85rem;
-  }
-
-  .btn, .logout-btn {
-    padding: 0.5rem 1rem;
-    font-size: 0.85rem;
+  .user-info {
+    align-items: flex-start;
   }
 }

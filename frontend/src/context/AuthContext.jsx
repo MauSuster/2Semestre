@@ -1,33 +1,34 @@
-// src/context/AuthContext.jsx
 import { createContext, useContext, useState, useEffect } from "react";
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(() => {
+    const saved = localStorage.getItem("user");
+    return saved ? JSON.parse(saved) : null;
+  });
+  const [loading, setLoading] = useState(false);
 
-  // 🔹 Carrega o usuário salvo
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-    setLoading(false);
-  }, []);
-
-  // 🔹 Salva usuário quando muda
-  useEffect(() => {
-    if (user) localStorage.setItem("user", JSON.stringify(user));
-    else localStorage.removeItem("user");
-  }, [user]);
-
-  // 🔹 Funções principais
   const login = async (email, senha) => {
-    // Aqui você faria a chamada à API de login
-    const fakeUser = { nome: "Usuário", email };
-    setUser(fakeUser);
-    localStorage.setItem("user", JSON.stringify(fakeUser));
+    setLoading(true);
+    try {
+      const res = await fetch("https://2-semestre-sr2r.vercel.app/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, senha }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message);
+
+      setUser(data);
+      localStorage.setItem("user", JSON.stringify(data));
+      return { success: true };
+    } catch (err) {
+      console.error(err);
+      return { success: false, message: err.message };
+    } finally {
+      setLoading(false);
+    }
   };
 
   const logout = () => {
@@ -35,13 +36,8 @@ export function AuthProvider({ children }) {
     localStorage.removeItem("user");
   };
 
-  const register = async (dados) => {
-    // chamada da API de cadastro, se houver
-    console.log("Registrando:", dados);
-  };
-
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, register }}>
+    <AuthContext.Provider value={{ user, login, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );

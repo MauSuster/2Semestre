@@ -98,24 +98,56 @@ r.delete("/users/:id", async (req, res) => {
 // Login
 r.post("/login", async (req, res) => {
   const { email, senha } = req.body;
-  if (!email || !senha) return res.status(400).json({ message: "Email e senha obrigatórios" });
+
+  if (!email || !senha)
+    return res.status(400).json({ message: "Email e senha são obrigatórios" });
 
   try {
     const pool = await getPool();
-    const result = await pool.request()
+    const result = await pool
+      .request()
       .input("email", email)
       .input("senha", senha)
-      .query("SELECT * FROM users WHERE email=@email AND senha=@senha");
+      .query(`
+        SELECT u.id, u.nome, u.sobrenome, u.email, u.funcao_id, f.nome_funcao
+        FROM users u
+        JOIN funcoes f ON f.id = u.funcao_id
+        WHERE u.email=@email AND u.senha=@senha
+      `);
 
     if (result.recordset.length === 0)
       return res.status(401).json({ message: "Usuário ou senha incorretos" });
 
-    res.json(result.recordset[0]);
+    const user = result.recordset[0];
+
+    // Buscar equipes do usuário
+    const equipesRes = await pool
+      .request()
+      .input("id_usuario", user.id)
+      .query(`
+        SELECT e.id_equipe, e.nome_equipe, e.descricao
+        FROM usuarios_equipes ue
+        JOIN equipes e ON e.id_equipe = ue.id_equipe
+        WHERE ue.id_usuario = @id_usuario
+      `);
+
+    const equipes = equipesRes.recordset || [];
+
+    return res.json({
+      id: user.id,
+      nome: user.nome,
+      sobrenome: user.sobrenome,
+      email: user.email,
+      funcao: user.nome_funcao,
+      funcao_id: user.funcao_id,
+      equipes
+    });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Erro no login" });
+    console.error("Erro no login:", err);
+    return res.status(500).json({ message: "Erro no servidor" });
   }
 });
+
 
 // ==========================================
 // FUNÇÕES
@@ -312,29 +344,12 @@ r.delete("/eventos/:id", async (req, res) => {
 // ==========================================
 
 // Listar doações
-r.get("/doacoes", async (_, res) => {
-  try {
-    const pool = await getPool();
-    const result = await pool.request().query(`
-      SELECT d.id_doacao, d.id_usuario, d.id_evento, d.tipo_doacao, d.valor, d.data_doacao, d.observacoes,
-             u.nome + ' ' + u.sobrenome AS usuario,
-             e.nome_evento
-      FROM doacoes d
-      JOIN users u ON u.id = d.id_usuario
-      JOIN eventos e ON e.id_evento = d.id_evento
-      ORDER BY d.data_doacao DESC
-    `);
-    res.json(result.recordset);
-  } catch (err) {
-    res.status(500).json({ message: "Erro ao listar doações" });
-  }
-});
-
 // Criar doação
 r.post("/doacoes", async (req, res) => {
-  const { id_usuario, id_evento, tipo_doacao, valor, observacoes, itens } = req.body;
+  const { id_usuario, id_evento, id_equipe, tipo_doacao, valor, observacoes, itens } = req.body;
+  console.log("Recebendo doação:", req.body);
 
-  if (!id_usuario || !id_evento || !tipo_doacao)
+  if (!id_usuario || !id_evento || !id_equipe || !tipo_doacao)
     return res.status(400).json({ message: "Campos obrigatórios ausentes" });
 
   try {
@@ -342,12 +357,13 @@ r.post("/doacoes", async (req, res) => {
     const result = await pool.request()
       .input("id_usuario", id_usuario)
       .input("id_evento", id_evento)
+      .input("id_equipe", id_equipe)
       .input("tipo_doacao", tipo_doacao)
       .input("valor", valor || null)
       .input("observacoes", observacoes || "")
       .query(`
-        INSERT INTO doacoes (id_usuario, id_evento, tipo_doacao, valor, observacoes)
-        VALUES (@id_usuario, @id_evento, @tipo_doacao, @valor, @observacoes);
+        INSERT INTO doacoes (id_usuario, id_evento, id_equipe, tipo_doacao, valor, observacoes)
+        VALUES (@id_usuario, @id_evento, @id_equipe, @tipo_doacao, @valor, @observacoes);
         SELECT id_doacao FROM doacoes WHERE id_doacao = SCOPE_IDENTITY();
       `);
 
@@ -374,6 +390,37 @@ r.post("/doacoes", async (req, res) => {
     res.status(500).json({ message: "Erro ao registrar doação" });
   }
 });
+
+// Listar doações
+r.get("/doacoes", async (_, res) => {
+  try {
+    const pool = await getPool();
+    const result = await pool.request().query(`
+      SELECT 
+        d.id_doacao,
+        d.id_usuario,
+        d.id_evento,
+        d.id_equipe,
+        d.tipo_doacao,
+        d.valor,
+        d.data_doacao,
+        d.observacoes,
+        u.nome + ' ' + u.sobrenome AS usuario,
+        e.nome_evento,
+        eq.nome_equipe
+      FROM doacoes d
+      JOIN users u ON u.id = d.id_usuario
+      JOIN eventos e ON e.id_evento = d.id_evento
+      LEFT JOIN equipes eq ON eq.id_equipe = d.id_equipe
+      ORDER BY d.data_doacao DESC
+    `);
+    res.json(result.recordset);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Erro ao listar doações" });
+  }
+});
+
 
 // ==========================================
 // EXPORT

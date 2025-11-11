@@ -1,242 +1,198 @@
-/* ======================================= */
-/* HOME INTERNA — estilo institucional     */
-/* ======================================= */
-
-html, body {
-  height: 100%;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  background-color: #f5f6ff;
-  font-family: "Poppins", sans-serif;
-  color: #333;
-}
-
+/* ================================
+   HOME PAGE LAYOUT
+================================== */
 .home-container {
+  background: #f9fafb;
+  min-height: 100vh;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  height: 100vh;          /* 🔹 agora ocupa a tela inteira */
-  width: 100vw;           /* 🔹 largura total */
-  background-color: #f5f6ff;
-  overflow: hidden;
 }
 
-/* MAIN */
+/* Corpo principal */
 .home-main {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;     /* centraliza horizontalmente */
   width: 100%;
-  height: 100%;
-  overflow-y: auto;        /* 🔹 permite rolar se o conteúdo for maior */
-  padding: 2rem 4%;
-  box-sizing: border-box;
+  padding: 3rem 2rem 4rem 2rem;
+  display: flex;
+  justify-content: center;
 }
 
 .home-content {
   width: 100%;
-  max-width: 1400px;       /* 🔹 conteúdo centralizado, mas usando toda a tela */
+  max-width: 1200px;
 }
 
-/* ==================== */
-/* Boas-vindas          */
-/* ==================== */
-
+/* ================================
+   BOAS-VINDAS
+================================== */
 .welcome-card {
   background: white;
-  padding: 2.5rem 3rem;
   border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  padding: 2rem 2.5rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
   margin-bottom: 2rem;
-  width: 100%;
-  box-sizing: border-box;
+  animation: fadeIn 0.4s ease-in-out;
 }
 
 .welcome-card h1 {
-  font-size: 2rem;
-  font-weight: 700;
-  background: linear-gradient(90deg, #7f5af0, #5ca0f2);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin-bottom: 0.8rem;
+  font-size: 1.8rem;
+  color: #1e1e2f;
+  margin-bottom: 0.6rem;
 }
 
 .welcome-card p {
-  font-size: 1rem;
   color: #555;
   line-height: 1.6;
+  font-size: 1rem;
 }
 
-/* ==================== */
-/* Métricas rápidas     */
-/* ==================== */
-
+/* ================================
+   MÉTRICAS RÁPIDAS
+================================== */
 .stats-section {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
-  width: 100%;
-  margin-bottom: 3rem;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.2rem;
+  margin-bottom: 2.5rem;
 }
 
 .stat-card {
-  background: linear-gradient(135deg, #7f5af0, #5ca0f2);
+  background: linear-gradient(135deg, #4f46e5, #6a4de8);
   color: white;
+  padding: 1.5rem 1rem;
   border-radius: 14px;
-  padding: 2rem 1.5rem;
   text-align: center;
-  box-shadow: 0 4px 14px rgba(127, 90, 240, 0.2);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .stat-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 22px rgba(127, 90, 240, 0.25);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 14px rgba(79, 70, 229, 0.3);
 }
 
 .stat-card h2 {
-  font-size: 2.2rem;
-  font-weight: 700;
-  margin-bottom: 0.4rem;
+  font-size: 2rem;
+  margin-bottom: 0.3rem;
 }
 
-.stat-card p {
-  font-size: 1rem;
-  opacity: 0.9;
-}
-
-/* ==================== */
-/* Atalhos              */
-/* ==================== */
-
+/* ================================
+   ATALHOS (Cards)
+================================== */
 .quick-links {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-  width: 100%;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 1.5rem;
   margin-bottom: 3rem;
 }
 
 .card-link {
   text-decoration: none;
-  color: inherit;
 }
 
 .card {
-  background-color: white;
-  border-radius: 12px;
-  padding: 2rem;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
-  border-top: 4px solid #7f5af0;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-  height: 100%;
+  background: #fff;
+  border-radius: 14px;
+  padding: 1.6rem;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 5px 16px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
 }
 
 .card h3 {
-  color: #6a4de8;
-  font-size: 1.15rem;
-  font-weight: 600;
-  margin-bottom: 0.6rem;
+  font-size: 1.2rem;
+  color: #4f46e5;
+  margin-bottom: 0.5rem;
 }
 
 .card p {
   color: #555;
   font-size: 0.95rem;
-  line-height: 1.5;
+  line-height: 1.4;
 }
 
-/* ==================== */
-/* Campanhas recentes   */
-/* ==================== */
-
+/* ================================
+   CAMPANHAS
+================================== */
 .campaign-section {
   margin-top: 2rem;
-  width: 100%;
 }
 
 .campaign-section h2 {
-  font-size: 1.6rem;
+  color: #1e1e2f;
+  margin-bottom: 1rem;
+  font-size: 1.4rem;
   font-weight: 600;
-  color: #222;
-  margin-bottom: 1.5rem;
 }
 
 .campaign-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  width: 100%;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
 }
 
 .campaign-card {
-  background: #fff;
-  border-radius: 12px;
-  padding: 2rem;
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
-  border-left: 5px solid #7f5af0;
-  transition: all 0.25s ease;
-}
-
-.campaign-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  background: white;
+  border-radius: 14px;
+  padding: 1.6rem;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
 }
 
 .campaign-card h4 {
-  font-size: 1.2rem;
-  color: #6a4de8;
-  margin-bottom: 0.6rem;
+  font-size: 1.1rem;
+  color: #4f46e5;
+  margin-bottom: 0.3rem;
 }
 
 .campaign-card p {
   color: #555;
   margin-bottom: 1rem;
-  line-height: 1.6;
 }
 
-/* Botão */
 .btn-secondary {
-  background-color: #6a4de8;
-  color: #fff;
+  background: #6a4de8;
+  color: white;
   border: none;
-  border-radius: 50px;
-  padding: 0.7rem 1.4rem;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
   font-size: 0.9rem;
-  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background 0.2s ease, transform 0.1s ease;
 }
 
 .btn-secondary:hover {
-  background-color: #5ca0f2;
-  box-shadow: 0 0 12px rgba(92, 160, 242, 0.4);
+  background: #4f46e5;
+  transform: translateY(-2px);
 }
 
-/* ==================== */
-/* Responsividade       */
-/* ==================== */
+/* ================================
+   ANIMAÇÃO E RESPONSIVO
+================================== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
 @media (max-width: 768px) {
   .home-main {
-    padding: 1.5rem;
+    padding: 2rem 1rem;
   }
 
-  .welcome-card {
-    padding: 1.5rem;
+  .welcome-card h1 {
+    font-size: 1.5rem;
   }
 
-  .stat-card h2 {
-    font-size: 1.8rem;
-  }
-
-  .campaign-list {
-    grid-template-columns: 1fr;
+  .card h3 {
+    font-size: 1.1rem;
   }
 }

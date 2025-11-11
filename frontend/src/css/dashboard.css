@@ -11,6 +11,37 @@ html, body {
   color: #333;
 }
 
+/* === FILTRO EVENTO === */
+.filtro-evento {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: #fff;
+  border-radius: 0.75rem;
+  padding: 1.2rem 1.8rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  font-size: 0.95rem;
+}
+
+.filtro-evento label {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.filtro-evento select {
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: #fff;
+  font-size: 0.95rem;
+  color: #111827;
+  transition: 0.2s ease;
+}
+
+.filtro-evento select:hover {
+  border-color: #4f46e5;
+}
+
 .dashboard-container {
   display: flex;
   flex-direction: column;
