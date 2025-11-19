@@ -8,7 +8,7 @@ export default function TopMenu({ active = "home" }) {
 
   const handleLogout = () => {
     logout();
-    navigate("/login");
+    navigate("/");
   };
 
   return (
